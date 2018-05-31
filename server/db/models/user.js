@@ -3,10 +3,31 @@ const Sequelize = require('sequelize')
 const db = require('../db')
 
 const User = db.define('user', {
-  email: {
+  spotifyEmail: {
     type: Sequelize.STRING,
     unique: true,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      isEmail: true
+    }
+  },
+  spotifyUrl: {
+    type: Sequelize.STRING,
+  },
+  spotifyHref: {
+    type: Sequelize.STRING,
+  },
+  spotifyId: {
+    type: Sequelize.INTEGER,
+  },
+  spotifyImg: {
+    type: Sequelize.INTEGER,
+  },
+  spotifyPremium: {
+    type: Sequelize.BOOLEAN,
+  },
+  spotifyUri: {
+    type: Sequelize.STRING,
   },
   password: {
     type: Sequelize.STRING,

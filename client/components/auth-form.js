@@ -2,6 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
 import {auth} from '../store'
+import { NavLink } from 'react-router-dom'
 
 /**
  * COMPONENT
@@ -11,7 +12,28 @@ const AuthForm = (props) => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit} name={name}>
+      <div>
+        <div id="login">
+          <h1>First, log in to spotify</h1>
+          <a href="/auth/spotify">Log in</a>
+        </div>
+        <div id="loggedin" />
+      </div>
+
+      <script id="loggedin-template" type="text/x-handlebars-template">
+          <h1>Logged in as </h1>
+          <img id="avatar" width="200" src="" />
+          <dl>
+            <dt>Display name</dt><dd />
+            <dt>Username</dt><dd />
+            <dt>Email</dt><dd />
+            <dt>Spotify URI</dt><dd><a href="" /></dd>
+            <dt>Link</dt><dd><a href="" /></dd>
+            <dt>Profile Image</dt><dd />
+          </dl>
+          <p><a href="/">Log in again</a></p>
+      </script>
+      {/* <form onSubmit={handleSubmit} name={name}>
         <div>
           <label htmlFor="email"><small>Email</small></label>
           <input name="email" type="text" />
@@ -25,7 +47,7 @@ const AuthForm = (props) => {
         </div>
         {error && error.response && <div> {error.response.data} </div>}
       </form>
-      <a href="/auth/google">{displayName} with Google</a>
+      <a href="/auth/google">{displayName} with Google</a> */}
     </div>
   )
 }
