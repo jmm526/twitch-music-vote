@@ -15,7 +15,7 @@ describe('User model', () => {
 
       beforeEach(() => {
         return User.create({
-          email: 'cody@puppybook.com',
+          spotifyEmail: 'cody@puppybook.com',
           password: 'bones'
         })
           .then(user => {

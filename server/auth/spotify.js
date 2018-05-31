@@ -46,12 +46,12 @@ if (!process.env.SPOTIFY_CLIENT_ID || !process.env.SPOTIFY_CLIENT_SECRET) {
     next();
   })
 
-  router.get('/', passport.authenticate('spotify', {scope: ['user-read-private', 'user-read-email'], showDialog: true}))
+  router.get('/', passport.authenticate('spotify', {scope: ['user-read-private', 'user-read-email', 'playlist-read-private']}))
 
-  router.get('/callback', passport.authenticate('spotify', {
-      failureRedirect: '/login'
-    }),
-    (req, res, next) => {
+  router.get('/callback', passport.authenticate('spotify', { failureRedirect: '/login' }),
+    async (req, res) => {
+      const {code} = req.query
+      req.session.spotifyAuthCode = code
       res.redirect('/home')
     })
 

@@ -1,5 +1,9 @@
 const router = require('express').Router()
 const {User} = require('../db/models')
+
+var SpotifyWebApi = require('spotify-web-api-node');
+var spotifyApi = new SpotifyWebApi();
+
 module.exports = router
 
 router.get('/', (req, res, next) => {
@@ -12,3 +16,8 @@ router.get('/', (req, res, next) => {
     .then(users => res.json(users))
     .catch(next)
 })
+
+router.get('/playlists', (req, res, next) => {
+  res.json('suh')
+})
+
