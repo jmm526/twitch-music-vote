@@ -2,6 +2,7 @@ const passport = require('passport')
 const router = require('express').Router()
 const axios = require('axios');
 const SpotifyStrategy = require('passport-spotify').Strategy;
+const {User} = require('../db/models')
 // const xmlhttprequest = require('xmlhttprequest');
 // const XMLHttpRequest = xmlhttprequest.XMLHttpRequest;
 
@@ -23,8 +24,17 @@ if (!process.env.SPOTIFY_CLIENT_ID || !process.env.SPOTIFY_CLIENT_SECRET) {
     callbackURL: `http://localhost:${process.env.PORT}/auth/spotify/callback/`
   }
 
-  const strategy = new SpotifyStrategy(spotifyConfig, (token, refreshToken, profile, done) => {
-    done(null, profile)
+  const strategy = new SpotifyStrategy(spotifyConfig, async (token, refreshToken, profile, done) => {
+    // console.log(profile)
+    const users = await User.findOrCreate({where: {spotifyId: profile.id}, defaults: {
+      spotifyEmail: profile._json.email,
+      spotifyHref: profile.href,
+      spotifyId: profile.id,
+      spotifyImg: profile.photos[0],
+      spotifyPremium: (profile.product === 'premium'),
+    }})
+    const user = users[0]
+    done(null, user)
   })
 
   passport.use(strategy)
@@ -39,11 +49,11 @@ if (!process.env.SPOTIFY_CLIENT_ID || !process.env.SPOTIFY_CLIENT_SECRET) {
   router.get('/', passport.authenticate('spotify', {scope: ['user-read-private', 'user-read-email'], showDialog: true}))
 
   router.get('/callback', passport.authenticate('spotify', {
-    failureRedirect: '/login'
-  }),
-  (req, res, next) => {
-    res.redirect('/')
-  })
+      failureRedirect: '/login'
+    }),
+    (req, res, next) => {
+      res.redirect('/home')
+    })
 
 }
 

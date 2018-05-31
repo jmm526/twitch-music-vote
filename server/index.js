@@ -53,8 +53,12 @@ const createApp = () => {
     resave: false,
     saveUninitialized: false
   }))
+
   app.use(passport.initialize())
   app.use(passport.session())
+
+  passport.serializeUser((user, done) => done(null, user));
+  passport.deserializeUser((user, done) => done(null, user));
 
   // auth and api routes
   app.use('/auth', require('./auth'))

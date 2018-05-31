@@ -11,23 +11,17 @@ const User = db.define('user', {
       isEmail: true
     }
   },
-  spotifyUrl: {
-    type: Sequelize.STRING,
-  },
   spotifyHref: {
     type: Sequelize.STRING,
   },
   spotifyId: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.STRING,
   },
   spotifyImg: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.STRING,
   },
   spotifyPremium: {
     type: Sequelize.BOOLEAN,
-  },
-  spotifyUri: {
-    type: Sequelize.STRING,
   },
   password: {
     type: Sequelize.STRING,
