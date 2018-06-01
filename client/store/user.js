@@ -7,11 +7,7 @@ import history from '../history'
 const GET_USER = 'GET_USER'
 const REMOVE_USER = 'REMOVE_USER'
 const REFRESH_SPOTIFY_TOKEN = 'REFRESH_SPOTIFY_TOKEN'
-
-/**
- * INITIAL STATE
- */
-const defaultUser = {}
+const GET_SPOTIFY_PLAYLISTS = 'GET_SPOTIFY_PLAYLISTS'
 
 /**
  * ACTION CREATORS
@@ -19,7 +15,7 @@ const defaultUser = {}
 const getUser = user => ({type: GET_USER, user})
 const removeUser = () => ({type: REMOVE_USER})
 const getSpotifyToken = tokens => ({type: REFRESH_SPOTIFY_TOKEN, tokens})
-
+const getSpotifyPlaylists = (playlists) => ({type: GET_SPOTIFY_PLAYLISTS, playlists})
 /**
  * THUNK CREATORS
  */
@@ -57,19 +53,47 @@ export const refreshSpotifyToken = (user) => {
   }
 }
 
+export const getPlaylists = () => {
+  return async (dispatch) => {
+    const {data} = await axios.get('/api/users/me/playlists')
+    dispatch(getSpotifyPlaylists(data.items))
+  }
+}
+
+/**
+ * INITIAL STATE
+ */
+const defaultUser = {
+  playlists: []
+}
+
 /**
  * REDUCER
  */
 export default function (state = defaultUser, action) {
   switch (action.type) {
     case GET_USER:
-      return action.user
+      const mystate = {...state,  createdAt: action.user.createdAt,
+                                  id: action.user.id,
+                                  spotifyAccessToken: action.user.spotifyAccessToken,
+                                  spotifyAuthCode: action.user.spotifyAuthCode,
+                                  spotifyEmail: action.user.spotifyEmail,
+                                  spotifyHref: action.user.spotifyHref,
+                                  spotifyId: action.user.spotifyId,
+                                  spotifyImg: action.user.spotifyImg,
+                                  spotifyPremium: action.user.spotifyPremium,
+                                  spotifyRefreshToken: action.user.spotifyRefreshToken,
+                                  spotifyState: action.user.spotifyState,
+                                  updatedAt: action.user.updatedAt}
+      return mystate
     case REMOVE_USER:
       return defaultUser
     case REFRESH_SPOTIFY_TOKEN:
       return {...state, spotifyAccessToken: action.tokens.action_token,
                         spotifyRefreshToken: action.tokens.refresh_token,
                         spotifyExpiresIn: action.tokens.expires_in}
+    case GET_SPOTIFY_PLAYLISTS:
+      return {...state, playlists: action.playlists}
     default:
       return state
   }

@@ -31,10 +31,7 @@ router.get('/me/token', (req, res, next) => {
     await user.update({spotifyAccessToken})
 
     req.user = user
-
-    console.log('user right after update', req.user)
   })
-
 
   res.send()
 
