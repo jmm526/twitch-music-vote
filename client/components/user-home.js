@@ -11,7 +11,7 @@ import {refreshSpotifyToken} from '../store'
 class UserHome extends Component {
 
   componentDidMount() {
-    this.props.getToken()
+    this.props.refreshSpotifyToken()
   }
 
   render() {
@@ -36,7 +36,7 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
   return {
-    getToken: () => dispatch(refreshSpotifyToken())
+    refreshSpotifyToken: () => dispatch(refreshSpotifyToken())
   }
 }
 
