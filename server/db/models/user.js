@@ -23,6 +23,18 @@ const User = db.define('user', {
   spotifyPremium: {
     type: Sequelize.BOOLEAN,
   },
+  spotifyAccessToken: {
+    type: Sequelize.TEXT,
+  },
+  spotifyRefreshToken: {
+    type: Sequelize.TEXT,
+  },
+  spotifyAuthCode: {
+    type: Sequelize.TEXT,
+  },
+  spotifyState: {
+    type: Sequelize.STRING
+  },
   password: {
     type: Sequelize.STRING,
     // Making `.password` act like a func hides it when serializing to JSON.

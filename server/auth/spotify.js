@@ -24,14 +24,15 @@ if (!process.env.SPOTIFY_CLIENT_ID || !process.env.SPOTIFY_CLIENT_SECRET) {
     callbackURL: `http://localhost:${process.env.PORT}/auth/spotify/callback/`
   }
 
-  const strategy = new SpotifyStrategy(spotifyConfig, async (token, refreshToken, profile, done) => {
-    // console.log(profile)
+  const strategy = new SpotifyStrategy(spotifyConfig, async (accessToken, refreshToken, profile, done) => {
     const users = await User.findOrCreate({where: {spotifyId: profile.id}, defaults: {
       spotifyEmail: profile._json.email,
       spotifyHref: profile.href,
       spotifyId: profile.id,
       spotifyImg: profile.photos[0],
       spotifyPremium: (profile.product === 'premium'),
+      spotifyAccessToken: accessToken,
+      spotifyRefreshToken: refreshToken,
     }})
     const user = users[0]
     done(null, user)
@@ -50,8 +51,9 @@ if (!process.env.SPOTIFY_CLIENT_ID || !process.env.SPOTIFY_CLIENT_SECRET) {
 
   router.get('/callback', passport.authenticate('spotify', { failureRedirect: '/login' }),
     async (req, res) => {
-      const {code} = req.query
-      req.session.spotifyAuthCode = code
+      const {code, state} = req.query
+      const user = await User.findById(req.user.id)
+      await user.update({spotifyAuthCode: code, spotifyState: state})
       res.redirect('/home')
     })
 

@@ -4,7 +4,7 @@ import axios from 'axios'
 
 export default class UserPlaylists extends Component {
   async componentDidMount() {
-    const res = await axios.get('/api/users/playlists')
+    // const res = await axios.get('/api/users/playlists')
   }
 
   render() {
