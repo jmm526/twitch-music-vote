@@ -29,6 +29,9 @@ const User = db.define('user', {
   spotifyRefreshToken: {
     type: Sequelize.TEXT,
   },
+  spotifyLastRefresh: {
+    type: Sequelize.DATE,
+  },
   spotifyAuthCode: {
     type: Sequelize.TEXT,
   },

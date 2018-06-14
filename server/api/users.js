@@ -2,6 +2,7 @@ const router = require('express').Router()
 const {User} = require('../db/models')
 const axios = require('axios')
 const refresh = require('spotify-refresh')
+const {spotifyCheckAccessToken, spotifyRefreshAccessToken} = require('./spotifyAccessToken')
 
 // var SpotifyWebApi = require('spotify-web-api-node');
 // var spotifyApi = new SpotifyWebApi();
@@ -19,35 +20,40 @@ router.get('/', (req, res, next) => {
     .catch(next)
 })
 
-router.get('/me/token', (req, res, next) => {
+router.get('/me/token', spotifyRefreshAccessToken)
 
-  let spotifyAccessToken
-  refresh(req.user.spotifyRefreshToken, process.env.SPOTIFY_CLIENT_ID, process.env.SPOTIFY_CLIENT_SECRET, async (err, res, body) => {
-    if (err) return
-    spotifyAccessToken = body.access_token
-    // console.log('new access token: ', JSON.stringify(body))
-
-    const user = await User.findById(req.user.id)
-    await user.update({spotifyAccessToken})
-
-    req.user = user
-  })
-
-  res.send()
-
-})
-
-router.get('/me/playlists', async (req, res, next) => {
+router.get('/me/playlists', spotifyCheckAccessToken, async (req, res, next) => {
   try {
-    console.log('req.user', req.user)
-    const accessToken = req.user.spotifyAccessToken
+    // console.log('req.user', req.user)
     const {data} = await axios.get(process.env.SPOTIFY_API_URL + '/v1/me/playlists', {
       headers: { Authorization: 'Bearer ' + req.user.spotifyAccessToken}
     })
-    res.send(data)
+    res.json(data)
   } catch (e) {
     console.log('Error when getting playlists')
     res.send(e)
   }
 })
+
+router.get('/me/playlists/:playlistId/tracks/:offset', spotifyCheckAccessToken, async (req, res, next) => {
+  // console.log('req.user', req.user)
+  const {data} = await axios.get(process.env.SPOTIFY_API_URL + `/v1/users/${req.user.spotifyId}/playlists/${req.params.playlistId}/tracks?offset=${req.params.offset}`, {
+    headers: { Authorization: 'Bearer ' + req.user.spotifyAccessToken}
+  })
+  res.json(data)
+})
+
+// router.get('/me/playsong', async (req, res, next) => {
+//   try {
+//     // console.log('req.user', req.user)
+//     const accessToken = req.user.spotifyAccessToken
+//     const {data} = await axios.get(process.env.SPOTIFY_API_URL + '/v1/me/playlists', {
+//       headers: { Authorization: 'Bearer ' + req.user.spotifyAccessToken}
+//     })
+//     res.send(data)
+//   } catch (e) {
+//     console.log('Error when getting playlists')
+//     res.send(e)
+//   }
+// })
 

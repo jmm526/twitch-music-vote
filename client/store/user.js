@@ -8,6 +8,7 @@ const GET_USER = 'GET_USER'
 const REMOVE_USER = 'REMOVE_USER'
 const REFRESH_SPOTIFY_TOKEN = 'REFRESH_SPOTIFY_TOKEN'
 const GET_SPOTIFY_PLAYLISTS = 'GET_SPOTIFY_PLAYLISTS'
+const SELECT_SPOTIFY_PLAYLIST = 'SELECT_SPOTIFY_PLAYLIST'
 
 /**
  * ACTION CREATORS
@@ -16,6 +17,7 @@ const getUser = user => ({type: GET_USER, user})
 const removeUser = () => ({type: REMOVE_USER})
 const getSpotifyToken = tokens => ({type: REFRESH_SPOTIFY_TOKEN, tokens})
 const getSpotifyPlaylists = (playlists) => ({type: GET_SPOTIFY_PLAYLISTS, playlists})
+const selectSpotifyPlaylist = (selectedPlaylist, selectedTracks) => ({type: SELECT_SPOTIFY_PLAYLIST, selectedPlaylist, selectedTracks})
 /**
  * THUNK CREATORS
  */
@@ -60,11 +62,28 @@ export const getPlaylists = () => {
   }
 }
 
+export const selectPlaylist = (playlist) => {
+  return async (dispatch) => {
+    console.log('in select playlist')
+    const numSongs = playlist.tracks.total
+    let offset = 0
+    let tracks = []
+    while (offset < numSongs) {
+      const {data} = await axios.get(`/api/users/me/playlists/${playlist.id}/tracks/${offset}`)
+      tracks = tracks.concat(data.items)
+      offset = offset + 100
+    }
+    dispatch(selectSpotifyPlaylist(playlist, tracks))
+  }
+}
+
 /**
  * INITIAL STATE
  */
 const defaultUser = {
-  playlists: []
+  playlists: [],
+  selectedPlaylist: {},
+  selectedTracks: []
 }
 
 /**
@@ -94,6 +113,8 @@ export default function (state = defaultUser, action) {
                         spotifyExpiresIn: action.tokens.expires_in}
     case GET_SPOTIFY_PLAYLISTS:
       return {...state, playlists: action.playlists}
+    case SELECT_SPOTIFY_PLAYLIST:
+      return {...state, selectedPlaylist: action.selectedPlaylist, selectedTracks: action.selectedTracks}
     default:
       return state
   }

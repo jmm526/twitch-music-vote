@@ -1,20 +1,23 @@
 import React, {Component} from 'react'
 import SpotifyWebApi from 'spotify-web-api-node'
 import {connect} from 'react-redux'
-import {getPlaylists, refreshSpotifyToken} from '../store'
+import {getPlaylists, refreshSpotifyToken, selectPlaylist} from '../store'
+import IndividualPlaylist from './individual-playlist'
 
 class UserPlaylists extends Component {
   async componentDidMount() {
     // const res = await axios.get('/api/users/playlists')
     try {
-      this.props.getPlaylists()
+      await this.props.getPlaylists()
     } catch (e) {
       try {
-        this.props.refreshToken()
-        this.props.getPlaylists()
+        await this.props.refreshToken()
+        await this.props.getPlaylists()
       } catch (e) { console.error(e) }
     }
+    await this.props.selectPlaylist(this.props.playlists[0])
   }
+
 
   render() {
     console.log(this.props)
@@ -24,7 +27,13 @@ class UserPlaylists extends Component {
         <ul>
           {
             this.props.playlists.map(playlist => {
-              return <li key={playlist.id}>{playlist.name}</li>
+              return (
+                <IndividualPlaylist
+                  key={playlist.id}
+                  onClick={this.handleSelectPlaylist}
+                  playlist={playlist}
+                  selectedBool={playlist.id === this.props.selectedPlaylist.id} />
+              )
             })
           }
         </ul>
@@ -35,14 +44,16 @@ class UserPlaylists extends Component {
 
 const mapState = (state) => {
   return {
-    playlists: state.user.playlists
+    playlists: state.user.playlists,
+    selectedPlaylist: state.user.selectedPlaylist,
   }
 }
 
 const mapDispatch = (dispatch) => {
   return {
     getPlaylists: () => dispatch(getPlaylists()),
-    refreshToken: () => dispatch(refreshSpotifyToken())
+    refreshToken: () => dispatch(refreshSpotifyToken()),
+    selectPlaylist: (playlist) => dispatch(selectPlaylist(playlist)),
   }
 }
 
