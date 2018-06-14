@@ -20,7 +20,7 @@ class UserPlaylists extends Component {
 
 
   render() {
-    console.log(this.props)
+    // console.log(this.props)
     return (
       <div id="user-playlists-body" >
         <h2>User Playlists</h2>

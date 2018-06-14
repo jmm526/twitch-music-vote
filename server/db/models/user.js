@@ -38,6 +38,12 @@ const User = db.define('user', {
   spotifyState: {
     type: Sequelize.STRING
   },
+  twitchEmail: {
+    type: Sequelize.STRING,
+  },
+  twitchId: {
+    type: Sequelize.STRING
+  },
   password: {
     type: Sequelize.STRING,
     // Making `.password` act like a func hides it when serializing to JSON.

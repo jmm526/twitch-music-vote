@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { Card, Image, Button } from 'semantic-ui-react'
 
-import {selectPlaylist} from '../store'
+import {selectPlaylist, playTrack} from '../store'
 
 class IndividualPlaylist extends Component {
   constructor(props) {
@@ -13,7 +13,8 @@ class IndividualPlaylist extends Component {
   }
 
   handleSelectPlaylist = async (evt) => {
-    this.props.selectPlaylist(this.props.playlist)
+    await this.props.selectPlaylist(this.props.playlist)
+    await this.props.play(this.props.selectedTracks[0].track)
   }
 
   render() {
@@ -56,17 +57,17 @@ class IndividualPlaylist extends Component {
   }
 }
 
-// const mapState = (state) => {
-//   return {
-//     orderId: state.order.id,
-//     userId: state.user.id
-//   }
-// }
-
-const mapDispatch = (dispatch) => {
+const mapState = (state) => {
   return {
-    selectPlaylist: (playlist) => dispatch(selectPlaylist(playlist))
+    selectedTracks: state.user.selectedTracks
   }
 }
 
-export default connect(null, mapDispatch)(IndividualPlaylist)
+const mapDispatch = (dispatch) => {
+  return {
+    selectPlaylist: (playlist) => dispatch(selectPlaylist(playlist)),
+    play: (track) => dispatch(playTrack(track))
+  }
+}
+
+export default connect(mapState, mapDispatch)(IndividualPlaylist)

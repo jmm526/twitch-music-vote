@@ -9,6 +9,8 @@ const REMOVE_USER = 'REMOVE_USER'
 const REFRESH_SPOTIFY_TOKEN = 'REFRESH_SPOTIFY_TOKEN'
 const GET_SPOTIFY_PLAYLISTS = 'GET_SPOTIFY_PLAYLISTS'
 const SELECT_SPOTIFY_PLAYLIST = 'SELECT_SPOTIFY_PLAYLIST'
+const PLAY_TRACK_SPOTIFY = 'PLAY_TRACK_SPOTIFY'
+const GET_DEVICES_SPOTIFY = 'GET_DEVICES_SPOTIFY'
 
 /**
  * ACTION CREATORS
@@ -18,6 +20,9 @@ const removeUser = () => ({type: REMOVE_USER})
 const getSpotifyToken = tokens => ({type: REFRESH_SPOTIFY_TOKEN, tokens})
 const getSpotifyPlaylists = (playlists) => ({type: GET_SPOTIFY_PLAYLISTS, playlists})
 const selectSpotifyPlaylist = (selectedPlaylist, selectedTracks) => ({type: SELECT_SPOTIFY_PLAYLIST, selectedPlaylist, selectedTracks})
+const playTrackSpotify = (currentTrack) => ({type: PLAY_TRACK_SPOTIFY, currentTrack})
+const getDevicesSpotify = () => ({type: GET_DEVICES_SPOTIFY})
+
 /**
  * THUNK CREATORS
  */
@@ -64,7 +69,7 @@ export const getPlaylists = () => {
 
 export const selectPlaylist = (playlist) => {
   return async (dispatch) => {
-    console.log('in select playlist')
+    // console.log('in select playlist')
     const numSongs = playlist.tracks.total
     let offset = 0
     let tracks = []
@@ -77,13 +82,27 @@ export const selectPlaylist = (playlist) => {
   }
 }
 
+// export const getDevices = () => {
+//   return async (dispatch) => {
+//     const {data}
+//   }
+// }
+
+export const playTrack = (track) => {
+  return async (dispatch) => {
+    const {data} = await axios.put(`/api/users/me/playtrack/${track.uri}`, {})
+    dispatch(playTrackSpotify(data))
+  }
+}
+
 /**
  * INITIAL STATE
  */
 const defaultUser = {
   playlists: [],
   selectedPlaylist: {},
-  selectedTracks: []
+  selectedTracks: [],
+  currentTrack: {}
 }
 
 /**
@@ -115,6 +134,8 @@ export default function (state = defaultUser, action) {
       return {...state, playlists: action.playlists}
     case SELECT_SPOTIFY_PLAYLIST:
       return {...state, selectedPlaylist: action.selectedPlaylist, selectedTracks: action.selectedTracks}
+    case PLAY_TRACK_SPOTIFY:
+      return {...state, currentTrack: action.currentTrack}
     default:
       return state
   }

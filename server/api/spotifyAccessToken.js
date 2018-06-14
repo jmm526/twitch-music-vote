@@ -20,7 +20,7 @@ spotifyRefreshAccessToken = (req, res, next) => {
     // console.log('new access token: ', JSON.stringify(body))
 
     user = await User.findById(req.user.id)
-    console.log('user: ', user)
+    // console.log('user: ', user)
     await user.update({spotifyAccessToken, spotifyLastRefresh: Date.now()})
 
     req.user = user
