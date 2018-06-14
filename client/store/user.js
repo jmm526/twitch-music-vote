@@ -26,6 +26,14 @@ const getDevicesSpotify = () => ({type: GET_DEVICES_SPOTIFY})
 /**
  * THUNK CREATORS
  */
+
+const defaultUser = {
+  playlists: [],
+  selectedPlaylist: {},
+  selectedTracks: [],
+  currentTrack: {}
+}
+
 export const me = () =>
   dispatch =>
     axios.get('/auth/me')
@@ -98,12 +106,6 @@ export const playTrack = (track) => {
 /**
  * INITIAL STATE
  */
-const defaultUser = {
-  playlists: [],
-  selectedPlaylist: {},
-  selectedTracks: [],
-  currentTrack: {}
-}
 
 /**
  * REDUCER
@@ -111,18 +113,7 @@ const defaultUser = {
 export default function (state = defaultUser, action) {
   switch (action.type) {
     case GET_USER:
-      const mystate = {...state,  createdAt: action.user.createdAt,
-                                  id: action.user.id,
-                                  spotifyAccessToken: action.user.spotifyAccessToken,
-                                  spotifyAuthCode: action.user.spotifyAuthCode,
-                                  spotifyEmail: action.user.spotifyEmail,
-                                  spotifyHref: action.user.spotifyHref,
-                                  spotifyId: action.user.spotifyId,
-                                  spotifyImg: action.user.spotifyImg,
-                                  spotifyPremium: action.user.spotifyPremium,
-                                  spotifyRefreshToken: action.user.spotifyRefreshToken,
-                                  spotifyState: action.user.spotifyState,
-                                  updatedAt: action.user.updatedAt}
+      const mystate = action.user
       return mystate
     case REMOVE_USER:
       return defaultUser

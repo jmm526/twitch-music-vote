@@ -9,13 +9,22 @@ import { NavLink } from 'react-router-dom'
  */
 const AuthForm = (props) => {
   const {name, displayName, handleSubmit, error} = props
+  console.log('user: ', props.user)
 
   return (
     <div>
       <div>
         <div id="login">
-          <h1>First, log in to spotify</h1>
-          <a href="/auth/spotify">Log in</a>
+          <h1>Log in to twitch</h1>
+          <a href="/auth/twitch">Log in</a>
+          {
+            props.user && props.user.twitchId
+              ? <div>
+                  <h1>Connect your spotify account</h1>
+                  <a href="/auth/spotify">Log in</a>
+                </div>
+              : <div />
+          }
         </div>
         <div id="loggedin" />
       </div>
@@ -63,7 +72,8 @@ const mapLogin = (state) => {
   return {
     name: 'login',
     displayName: 'Login',
-    error: state.user.error
+    error: state.user.error,
+    user: state.user
   }
 }
 

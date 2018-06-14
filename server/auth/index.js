@@ -39,9 +39,16 @@ router.post('/logout', (req, res) => {
 })
 
 router.get('/me', (req, res) => {
-  res.json(req.user)
+  if (req.user) {
+    res.json(req.user)
+  } else {
+    console.log('suhhhhh')
+    res.json({})
+  }
 })
 
 router.use('/google', require('./google'))
 
 router.use('/spotify', require('./spotify'))
+
+router.use('/twitch', require('./twitch'))

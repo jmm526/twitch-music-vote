@@ -25,11 +25,16 @@ if (!process.env.TWITCH_CLIENT_ID || !process.env.TWITCH_CLIENT_SECRET) {
   }
 
   const strategy = new TwitchStrategy(twitchConfig, async (accessToken, refreshToken, profile, done) => {
+    // const user = await User.findOne({where: {twitchId: profile.id}})
+    // if (!user)
+    console.log('profile: ', profile)
     const users = await User.findOrCreate({where: {twitchId: profile.id}, defaults: {
       twitchId: profile.id,
-      twitchEmail: profile.email
+      twitchLogin: profile.login,
+      twitchImg: profile.profile_image_url
     }})
-    const user = users[0]
+    user = users[0]
+    console.log('user', user)
     done(null, user)
   })
 
@@ -46,6 +51,7 @@ if (!process.env.TWITCH_CLIENT_ID || !process.env.TWITCH_CLIENT_SECRET) {
 
   router.get('/callback', passport.authenticate('twitch', { failureRedirect: '/login' }),
     async (req, res) => {
+      console.log('req.user', req.user)
       // const {code, state} = req.query
       // const user = await User.findById(req.user.id)
       // await user.update({spotifyAuthCode: code, spotifyState: state})

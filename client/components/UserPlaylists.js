@@ -23,20 +23,26 @@ class UserPlaylists extends Component {
     // console.log(this.props)
     return (
       <div id="user-playlists-body" >
-        <h2>User Playlists</h2>
-        <ul>
-          {
-            this.props.playlists.map(playlist => {
-              return (
-                <IndividualPlaylist
-                  key={playlist.id}
-                  onClick={this.handleSelectPlaylist}
-                  playlist={playlist}
-                  selectedBool={playlist.id === this.props.selectedPlaylist.id} />
-              )
-            })
-          }
-        </ul>
+      {
+        this.props.isLoggedIn
+          ? <div>
+              <h2>User Playlists</h2>
+              <ul>
+                {
+                  this.props.playlists.map(playlist => {
+                    return (
+                      <IndividualPlaylist
+                        key={playlist.id}
+                        onClick={this.handleSelectPlaylist}
+                        playlist={playlist}
+                        selectedBool={playlist.id === this.props.selectedPlaylist.id} />
+                    )
+                  })
+                }
+              </ul>
+            </div>
+          : <div />
+      }
       </div>
     )
   }
@@ -44,6 +50,7 @@ class UserPlaylists extends Component {
 
 const mapState = (state) => {
   return {
+    isLoggedIn: !!state.user.spotifyEmail,
     playlists: state.user.playlists,
     selectedPlaylist: state.user.selectedPlaylist,
   }

@@ -6,7 +6,6 @@ const User = db.define('user', {
   spotifyEmail: {
     type: Sequelize.STRING,
     unique: true,
-    allowNull: false,
     validate: {
       isEmail: true
     }
@@ -38,10 +37,13 @@ const User = db.define('user', {
   spotifyState: {
     type: Sequelize.STRING
   },
-  twitchEmail: {
+  twitchLogin: {
     type: Sequelize.STRING,
   },
   twitchId: {
+    type: Sequelize.STRING
+  },
+  twitchImg: {
     type: Sequelize.STRING
   },
   password: {
