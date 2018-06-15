@@ -55,10 +55,5 @@ router.put('/me/playtrack/:trackURI', async (req, res, next) => {
   }
 })
 
-router.get('/me/devices', async (req, res, next) => {
-  const {data} = await axios.put(process.env.SPOTIFY_API_URL + '/v1/me/player/play',
-  {uris: [req.params.trackURI]},
-  {headers: { Authorization: 'Bearer ' + req.user.spotifyAccessToken}})
-  res.json(data)
-})
+router.post('/me/vote_cycle')
 

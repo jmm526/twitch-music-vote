@@ -16,7 +16,7 @@ module.exports = () => {
   }
 
   // These are the commands the bot knows (defined below):
-  let knownCommands = { echo, haiku }
+  let knownCommands = { echo, haiku, musicvote }
 
   // Function called when the "echo" command is issued:
   function echo (target, context, params) {
@@ -41,6 +41,14 @@ module.exports = () => {
       sendMessage(target, context, h)
       })
     })
+  }
+
+  function musicvote (target, context, params) {
+    if (params.length) {
+      if (parseInt(params[0]) > 0 && parseInt(params[0]) < 5) {
+        // do stuff with votes
+      }
+    }
   }
 
   // Helper function to send the correct type of message:

@@ -1,5 +1,7 @@
 const User = require('./user')
 const Playlist = require('./playlist')
+const VoteCycle = require('./voteCycle')
+const Vote = require('./vote')
 
 /**
  * If we had any associations to make, this would be a great place to put them!
@@ -11,6 +13,12 @@ const Playlist = require('./playlist')
  User.hasMany(Playlist)
  Playlist.belongsTo(User)
 
+ User.hasMany(Vote)
+ Vote.belongsTo(User)
+
+ VoteCycle.hasMany(Vote)
+ Vote.belongsTo(VoteCycle)
+
 /**
  * We'll export all of our models here, so that any time a module needs a model,
  * we can just require it from 'db/models'
@@ -19,5 +27,7 @@ const Playlist = require('./playlist')
  */
 module.exports = {
   User,
-  Playlist
+  Playlist,
+  VoteCycle,
+  Vote
 }
