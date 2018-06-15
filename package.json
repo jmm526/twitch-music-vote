@@ -29,6 +29,7 @@
     "dotenv": "^5.0.1",
     "express": "^4.14.1",
     "express-session": "^1.15.1",
+    "haikudos": "^1.0.7",
     "history": "^4.6.3",
     "morgan": "^1.8.1",
     "passport": "^0.3.2",
@@ -51,6 +52,7 @@
     "socket.io": "^2.0.3",
     "spotify-refresh": "^2.0.3",
     "spotify-web-api-node": "^3.1.1",
+    "tmi.js": "^1.2.1",
     "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {

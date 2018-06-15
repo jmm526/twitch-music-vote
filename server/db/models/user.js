@@ -46,6 +46,12 @@ const User = db.define('user', {
   twitchImg: {
     type: Sequelize.STRING
   },
+  twitchAuthCode: {
+    type: Sequelize.TEXT,
+  },
+  twitchAccessToken: {
+    type: Sequelize.TEXT,
+  },
   password: {
     type: Sequelize.STRING,
     // Making `.password` act like a func hides it when serializing to JSON.

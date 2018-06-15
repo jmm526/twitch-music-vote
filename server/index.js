@@ -13,6 +13,8 @@ const app = express()
 const socketio = require('socket.io')
 const dotenv = require('dotenv')
 
+const twitchBot = require('./bot')
+
 dotenv.config()
 
 module.exports = app
@@ -94,6 +96,7 @@ const createApp = () => {
 const startListening = () => {
   // start listening (and create a 'server' object representing our server)
   const server = app.listen(PORT, () => console.log(`Mixing it up on port ${PORT}`))
+  twitchBot()
 
   // set up our socket control center
   const io = socketio(server)

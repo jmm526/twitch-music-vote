@@ -10,9 +10,9 @@ import {refreshSpotifyToken, getPlaylists, selectPlaylist} from '../store'
 
 class UserHome extends Component {
 
-  componentDidMount() {
-    this.props.refreshToken()
-  }
+  // componentDidMount() {
+  //   this.props.refreshToken()
+  // }
 
   render() {
     const {user} = this.props

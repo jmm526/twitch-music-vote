@@ -60,9 +60,10 @@ if (!process.env.SPOTIFY_CLIENT_ID || !process.env.SPOTIFY_CLIENT_SECRET) {
 
   router.get('/callback', passport.authenticate('spotify', { failureRedirect: '/login' }),
     async (req, res) => {
+      console.log('stuff')
       const {code, state} = req.query
       const user = await User.findById(req.user.id)
-      await user.update({spotifyAuthCode: code, spotifyState: state})
+      req.user = await user.update({spotifyAuthCode: code, spotifyState: state})
       res.redirect('/home')
     })
 

@@ -2,7 +2,7 @@ const router = require('express').Router()
 const {User} = require('../db/models')
 const axios = require('axios')
 const refresh = require('spotify-refresh')
-const {spotifyCheckAccessToken, spotifyRefreshAccessToken} = require('./spotifyAccessToken')
+const {spotifyCheckAccessToken, spotifyRefreshAccessToken} = require('./AccessToken')
 
 // var SpotifyWebApi = require('spotify-web-api-node');
 // var spotifyApi = new SpotifyWebApi();

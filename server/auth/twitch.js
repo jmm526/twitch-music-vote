@@ -27,14 +27,13 @@ if (!process.env.TWITCH_CLIENT_ID || !process.env.TWITCH_CLIENT_SECRET) {
   const strategy = new TwitchStrategy(twitchConfig, async (accessToken, refreshToken, profile, done) => {
     // const user = await User.findOne({where: {twitchId: profile.id}})
     // if (!user)
-    console.log('profile: ', profile)
     const users = await User.findOrCreate({where: {twitchId: profile.id}, defaults: {
       twitchId: profile.id,
       twitchLogin: profile.login,
       twitchImg: profile.profile_image_url
     }})
     user = users[0]
-    console.log('user', user)
+    // console.log('user', user)
     done(null, user)
   })
 
@@ -47,15 +46,14 @@ if (!process.env.TWITCH_CLIENT_ID || !process.env.TWITCH_CLIENT_SECRET) {
     next();
   })
 
-  router.get('/', passport.authenticate('twitch'))
+  router.get('/', passport.authenticate('twitch', {scope: ['chat_login']}))
 
-  router.get('/callback', passport.authenticate('twitch', { successRedirect: '/home', failureRedirect: '/login' }),
-    async (req, res) => {
-      console.log('req.user', req.user)
-      // const {code, state} = req.query
-      // const user = await User.findById(req.user.id)
-      // await user.update({spotifyAuthCode: code, spotifyState: state})
-      res.json(req.user)
+  router.get('/callback', passport.authenticate('twitch', { failureRedirect: '/login' }),
+    async (req, res, next) => {
+      const {code} = req.query
+      const user = await User.findById(req.user.id)
+      req.user = await user.update({twitchAuthCode: code})
+      res.redirect('/home')
     })
 
 }

@@ -2,7 +2,7 @@ const {User} = require('../db/models')
 const axios = require('axios')
 const refresh = require('spotify-refresh')
 
-module.exports = spotifyCheckAccessToken = (req, res, next) => {
+const spotifyCheckAccessToken = (req, res, next) => {
   if (!req.user.spotifyLastRefresh || Date.now() - req.user.spotifyLastRefresh > 2400000) {
     console.log('REFRESHING ACCESS TOKEN')
     spotifyRefreshAccessToken(req, res, next)
@@ -10,7 +10,7 @@ module.exports = spotifyCheckAccessToken = (req, res, next) => {
   next()
 }
 
-spotifyRefreshAccessToken = (req, res, next) => {
+const spotifyRefreshAccessToken = (req, res, next) => {
 
   let spotifyAccessToken
   let user
@@ -27,6 +27,10 @@ spotifyRefreshAccessToken = (req, res, next) => {
   })
 
   res.json(user)
+
+}
+
+const twitchGetAccessToken = (req, res, next) => {
 
 }
 
