@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import UserPlaylists from './UserPlaylists'
-import {refreshSpotifyToken} from '../store'
+import {refreshSpotifyToken, getPlaylists, selectPlaylist} from '../store'
 
 /**
  * COMPONENT
@@ -11,7 +11,7 @@ import {refreshSpotifyToken} from '../store'
 class UserHome extends Component {
 
   componentDidMount() {
-    this.props.refreshSpotifyToken()
+    this.props.refreshToken()
   }
 
   render() {
@@ -30,13 +30,17 @@ class UserHome extends Component {
  */
 const mapState = (state) => {
   return {
-    user: state.user
+    user: state.user,
+    playlists: state.user.playlists,
+    selectedPlaylist: state.user.selectedPlaylist,
   }
 }
 
 const mapDispatch = (dispatch) => {
   return {
-    refreshSpotifyToken: () => dispatch(refreshSpotifyToken())
+    getPlaylists: () => dispatch(getPlaylists()),
+    refreshToken: () => dispatch(refreshSpotifyToken()),
+    selectPlaylist: (playlist) => dispatch(selectPlaylist(playlist)),
   }
 }
 

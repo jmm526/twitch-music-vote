@@ -5,26 +5,25 @@ import {getPlaylists, refreshSpotifyToken, selectPlaylist} from '../store'
 import IndividualPlaylist from './individual-playlist'
 
 class UserPlaylists extends Component {
-  async componentDidMount() {
-    // const res = await axios.get('/api/users/playlists')
-    try {
-      await this.props.getPlaylists()
-    } catch (e) {
-      try {
-        await this.props.refreshToken()
-        await this.props.getPlaylists()
-      } catch (e) { console.error(e) }
-    }
-    await this.props.selectPlaylist(this.props.playlists[0])
+  constructor(props) {
+    super(props)
+    this.props.getPlaylists()
+    .then(() => {
+      return this.props.refreshToken()
+    })
+    .then(() => {
+      return this.props.getPlaylists()
+    })
+    .then(() => {
+      return this.props.selectPlaylist(this.props.playlists[0])
+    })
   }
 
-
   render() {
-    // console.log(this.props)
     return (
       <div id="user-playlists-body" >
       {
-        this.props.isLoggedIn
+        this.props.isLoggedIn && this.props.playlists && this.props.selectedPlaylist
           ? <div>
               <h2>User Playlists</h2>
               <ul>

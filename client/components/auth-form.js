@@ -9,7 +9,6 @@ import { NavLink } from 'react-router-dom'
  */
 const AuthForm = (props) => {
   const {name, displayName, handleSubmit, error} = props
-  console.log('user: ', props.user)
 
   return (
     <div>

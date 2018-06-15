@@ -6,6 +6,8 @@ const {User} = require('../db/models')
 // const xmlhttprequest = require('xmlhttprequest');
 // const XMLHttpRequest = xmlhttprequest.XMLHttpRequest;
 
+let userId
+
 const corsOptions = {
   origin: `http://localhost:${process.env.PORT}`,
   credentials: true
@@ -18,6 +20,12 @@ if (!process.env.SPOTIFY_CLIENT_ID || !process.env.SPOTIFY_CLIENT_SECRET) {
   console.log('Spotify client ID / secret not found. Skipping Spotify OAuth.')
 
 } else {
+
+  router.get('/', (req, res, next) => {
+    userId = req.user.id
+    next()
+  })
+
   const spotifyConfig = {
     clientID: process.env.SPOTIFY_CLIENT_ID,
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
@@ -25,7 +33,9 @@ if (!process.env.SPOTIFY_CLIENT_ID || !process.env.SPOTIFY_CLIENT_SECRET) {
   }
 
   const strategy = new SpotifyStrategy(spotifyConfig, async (accessToken, refreshToken, profile, done) => {
-    const users = await User.findOrCreate({where: {spotifyId: profile.id}, defaults: {
+    console.log(userId)
+    const foundUser = await User.findOne({where: {id: userId}})
+    const user = await foundUser.update({
       spotifyEmail: profile._json.email,
       spotifyHref: profile.href,
       spotifyId: profile.id,
@@ -33,8 +43,7 @@ if (!process.env.SPOTIFY_CLIENT_ID || !process.env.SPOTIFY_CLIENT_SECRET) {
       spotifyPremium: (profile.product === 'premium'),
       spotifyAccessToken: accessToken,
       spotifyRefreshToken: refreshToken,
-    }})
-    const user = users[0]
+    })
     done(null, user)
   })
 

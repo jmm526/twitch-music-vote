@@ -49,13 +49,13 @@ if (!process.env.TWITCH_CLIENT_ID || !process.env.TWITCH_CLIENT_SECRET) {
 
   router.get('/', passport.authenticate('twitch'))
 
-  router.get('/callback', passport.authenticate('twitch', { failureRedirect: '/login' }),
+  router.get('/callback', passport.authenticate('twitch', { successRedirect: '/home', failureRedirect: '/login' }),
     async (req, res) => {
       console.log('req.user', req.user)
       // const {code, state} = req.query
       // const user = await User.findById(req.user.id)
       // await user.update({spotifyAuthCode: code, spotifyState: state})
-      res.redirect('/home')
+      res.json(req.user)
     })
 
 }
