@@ -7,14 +7,23 @@ import { Card, Image, Button } from 'semantic-ui-react'
 
 import {selectPlaylist, playTrack} from '../store'
 
+import io from 'socket.io-client'
+const socket = io(window.location.origin)
+
 class IndividualPlaylist extends Component {
   constructor(props) {
     super(props)
+    if (this.props.selectedBool) {
+      socket.on('random', () => {
+        const rand = this.props.selectedTracks[Math.floor(Math.random() * this.props.selectedTracks.length)];
+        this.props.play(rand.track)
+      })
+    }
   }
 
   handleSelectPlaylist = async (evt) => {
     await this.props.selectPlaylist(this.props.playlist)
-    await this.props.play(this.props.selectedTracks[0].track)
+    // await this.props.play(this.props.selectedTracks[0].track)
   }
 
   render() {

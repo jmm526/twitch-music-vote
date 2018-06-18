@@ -1,7 +1,7 @@
 const tmi = require('tmi.js')
 const haikudos = require('haikudos')
 
-module.exports = () => {
+module.exports = (io) => {
   // Valid commands start with:
   let commandPrefix = '!'
   // Define configuration options:
@@ -16,7 +16,7 @@ module.exports = () => {
   }
 
   // These are the commands the bot knows (defined below):
-  let knownCommands = { echo, haiku, musicvote }
+  let knownCommands = { echo, haiku, musicvote, random }
 
   // Function called when the "echo" command is issued:
   function echo (target, context, params) {
@@ -41,6 +41,11 @@ module.exports = () => {
       sendMessage(target, context, h)
       })
     })
+  }
+
+  function random (target, context, params) {
+    console.log('random')
+    io.emit('random')
   }
 
   function musicvote (target, context, params) {

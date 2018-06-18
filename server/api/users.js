@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const {User} = require('../db/models')
+const {User, VoteCycle, Vote} = require('../db/models')
 const axios = require('axios')
 const refresh = require('spotify-refresh')
 const {spotifyCheckAccessToken, spotifyRefreshAccessToken} = require('./AccessToken')
@@ -55,5 +55,14 @@ router.put('/me/playtrack/:trackURI', async (req, res, next) => {
   }
 })
 
-router.post('/me/vote_cycle')
+// router.post('/me/vote_cycle', async (req, res, next) => {
+//   try {
+//     const {currentTrack} = req.body
+//     const newTracks = []
+//     while (newTracks.length < 4) {
+
+//     }
+
+//   }
+// })
 
